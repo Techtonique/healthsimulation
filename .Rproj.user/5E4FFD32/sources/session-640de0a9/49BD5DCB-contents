@@ -1,0 +1,4 @@
+- Transform text into embeddings
+- Based on the data set:
+Generate out-of-sample data for the variable of interest + prediction intervals +
++ coverage

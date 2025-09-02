@@ -1,0 +1,48 @@
+---
+title: "WellnessData"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{WellnessData}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+library(healthsimulation)
+```
+
+```{r, fig.width=6.5}
+# Initialize a new WellnessData object with a specific seed
+wd <- WellnessData$new(seed = 123)
+
+# Generate the dataset
+wd$generate_data(n_participants = 5, n_days = 30, save_csv = TRUE)
+
+# Print a summary
+wd$print()
+
+# Create beautiful plots
+library(patchwork) # For arranging plots
+
+# Individual participant time series
+p1 <- wd$plot_participant_timeseries("P01")
+print(p1)
+
+# Correlation matrix (requires GGally)
+p2 <- wd$plot_correlation_matrix()
+print(p2)
+
+# WellnessScore trend with confidence interval
+p3 <- wd$plot_metric_trend("WellnessScore", ribbon = TRUE)
+print(p3)
+
+# Temperature distribution
+p4 <- wd$plot_temperature_distribution()
+print(p4)
+
+# Arrange multiple plots together (if patchwork is installed)
+if(requireNamespace("patchwork", quietly = TRUE)) {
+  (p3 + p4) / p1 + plot_layout(heights = c(1, 2))
+}
+```
+

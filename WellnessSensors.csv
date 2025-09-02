@@ -1,0 +1,146 @@
+ParticipantID,DateTime,ActivityLevel,AvgHeartRate,SleepHours,WorkHours,EnvTemperature,MoodText,WellnessScore
+P01,2023-11-02,4.9,72,6.3,5.6,Warm,Felt great today!,75
+P01,2023-11-03,4,71,6.8,5.3,Mild,Energetic and motivated,86
+P01,2023-11-04,5,72,7,5.9,Warm,Energetic and motivated,84
+P01,2023-11-05,3.6,74,7,5.5,Mild,Felt great today!,86
+P01,2023-11-06,3.6,74,6.7,7.1,Mild,"Day was ok, nothing special",82
+P01,2023-11-07,3.8,73,6.3,8.9,Warm,"Didn't sleep well, feeling groggy",75
+P01,2023-11-08,3.6,75,6,7.2,Mild,Burnt out from work,57
+P01,2023-11-09,4.1,76,6.3,8,Warm,Feeling average,60
+P01,2023-11-10,3.8,76,6,8.3,Warm,"Didn't sleep well, feeling groggy",73
+P01,2023-11-11,3.1,74,6.1,8.2,Mild,"Low energy, not very active",58
+P01,2023-11-12,3.6,71,6.2,7,Warm,A bit tired Nice day outside.,53
+P01,2023-11-13,3.3,75,7.3,7.1,Warm,Very productive and happy Nice day outside.,62
+P01,2023-11-14,3.7,72,6.9,7.1,Warm,A bit tired,82
+P01,2023-11-15,3.9,77,7,7.7,Warm,"Day was ok, nothing special",67
+P01,2023-11-16,4,78,7,7.3,Warm,Very productive and happy,67
+P01,2023-11-17,4.2,75,6.5,8.2,Warm,"Day was ok, nothing special",77
+P01,2023-11-18,4.4,71,6.6,7.5,Mild,"Day was ok, nothing special",69
+P01,2023-11-19,3.6,70,7.4,8.3,Mild,A bit tired,79
+P01,2023-11-20,2.4,71,7.5,7.1,Cold,"Day was ok, nothing special",69
+P01,2023-11-21,3.2,70,7.3,6.3,Cold,Calm and relaxed,77
+P01,2023-11-22,2.3,71,7,9.5,Cold,"Didn't sleep well, feeling groggy",87
+P01,2023-11-23,2.4,69,6,8.1,Cold,"Low energy, not very active Too cold to go out.",59
+P01,2023-11-24,3,70,6.8,8,Cold,Stressed and overwhelmed,54
+P01,2023-11-25,2.8,69,6.1,8.3,Cold,"Didn't sleep well, feeling groggy",63
+P01,2023-11-26,2.5,66,6.7,7.5,Cold,"Didn't sleep well, feeling groggy",59
+P01,2023-11-27,3.1,68,7.7,7.9,Mild,Very productive and happy,67
+P01,2023-11-28,3.1,72,6.8,8,Mild,Feeling average,89
+P01,2023-11-29,3.2,71,7.2,7.6,Mild,A bit tired,76
+P01,2023-11-30,3.4,73,7,7.6,Mild,Feeling average,72
+P02,2023-11-02,4,64,6.4,8,Warm,Felt great today!,91
+P02,2023-11-03,3.5,63,6.1,8,Mild,"Day was ok, nothing special",76
+P02,2023-11-04,3.2,63,7,8.6,Warm,"Day was ok, nothing special",77
+P02,2023-11-05,2.9,64,7.1,8.8,Mild,"Didn't sleep well, feeling groggy",75
+P02,2023-11-06,2.8,66,5.9,8,Mild,Burnt out from work,70
+P02,2023-11-07,3.5,62,5.4,8.1,Warm,"Low energy, not very active",62
+P02,2023-11-08,3.1,64,5.7,7.1,Mild,"Low energy, not very active",68
+P02,2023-11-09,3.7,69,6.4,8,Warm,Feeling average,65
+P02,2023-11-10,3.7,73,6.4,7.4,Warm,"Day was ok, nothing special Nice day outside.",73
+P02,2023-11-11,2,74,6.8,9.4,Mild,Stressed and overwhelmed,69
+P02,2023-11-12,3.6,72,7.2,7.2,Warm,Calm and relaxed Nice day outside.,52
+P02,2023-11-13,3.8,65,7.9,7,Warm,Very productive and happy,86
+P02,2023-11-14,3.4,64,7.5,8,Warm,Felt great today!,95
+P02,2023-11-15,3.5,65,7.2,8.2,Warm,Feeling average,93
+P02,2023-11-16,3.6,67,6.2,7.4,Warm,Feeling average,78
+P02,2023-11-17,3.9,66,6.3,6.7,Warm,Energetic and motivated,76
+P02,2023-11-18,3.7,63,6.1,7.3,Mild,A bit tired,90
+P02,2023-11-19,3.3,69,5.8,7.4,Mild,"Day was ok, nothing special",69
+P02,2023-11-20,3.1,70,5.9,6.1,Cold,"Day was ok, nothing special Too cold to go out.",64
+P02,2023-11-21,3.3,69,6.6,6.9,Cold,Calm and relaxed,70
+P02,2023-11-22,3.4,71,5.6,7.4,Cold,Feeling average Too cold to go out.,81
+P02,2023-11-23,3.5,65,5.7,7.6,Cold,Feeling average Too cold to go out.,67
+P02,2023-11-24,3,67,6,6.8,Cold,"Day was ok, nothing special",76
+P02,2023-11-25,3.6,66,5.8,7.6,Cold,A bit tired Too cold to go out.,71
+P02,2023-11-26,3,69,6.2,8.7,Cold,Stressed and overwhelmed,66
+P02,2023-11-27,3.9,68,6.5,8.5,Mild,"Day was ok, nothing special",60
+P02,2023-11-28,3.2,68,6.5,7.1,Mild,A bit tired,73
+P02,2023-11-29,3.1,71,5.3,7,Mild,Burnt out from work,68
+P02,2023-11-30,3.5,69,7,7.6,Mild,Calm and relaxed,63
+P03,2023-11-02,4.3,72,8.6,7.2,Warm,Calm and relaxed,68
+P03,2023-11-03,3.3,72,7.9,7.8,Mild,Very productive and happy,97
+P03,2023-11-04,3.7,76,8.1,7.9,Warm,Calm and relaxed,84
+P03,2023-11-05,3.7,75,7.5,8.1,Mild,Feeling average,84
+P03,2023-11-06,4.1,72,7.9,7.3,Mild,Calm and relaxed,64
+P03,2023-11-07,3.7,73,7.8,8.3,Warm,Very productive and happy,81
+P03,2023-11-08,2.9,76,8.5,7.5,Mild,Energetic and motivated,83
+P03,2023-11-09,3,76,7.4,7.8,Warm,A bit tired,85
+P03,2023-11-10,3.2,79,7.3,8.4,Warm,A bit tired Nice day outside.,63
+P03,2023-11-11,3,76,7,7.8,Mild,"Day was ok, nothing special",57
+P03,2023-11-12,3.6,77,6.9,8.6,Warm,"Day was ok, nothing special",66
+P03,2023-11-13,4,74,6.7,7.4,Warm,"Day was ok, nothing special Nice day outside.",65
+P03,2023-11-14,4,74,6.4,5.7,Warm,Felt great today!,72
+P03,2023-11-15,3.3,73,7,7.4,Warm,A bit tired,78
+P03,2023-11-16,3.7,71,6.5,8.6,Warm,"Low energy, not very active",62
+P03,2023-11-17,4,73,7.4,8.3,Warm,Very productive and happy,64
+P03,2023-11-18,2.6,79,6.8,8.7,Mild,"Didn't sleep well, feeling groggy",85
+P03,2023-11-19,2.9,78,6.9,7.7,Mild,Feeling average,60
+P03,2023-11-20,2.2,79,7.3,7.9,Cold,"Didn't sleep well, feeling groggy",66
+P03,2023-11-21,1.8,77,7.5,6.6,Cold,Feeling average,56
+P03,2023-11-22,2,74,7.3,8.5,Cold,Burnt out from work,64
+P03,2023-11-23,1.9,75,7.3,9.9,Cold,Burnt out from work,57
+P03,2023-11-24,2,74,7.7,10,Cold,"Low energy, not very active",60
+P03,2023-11-25,2.4,73,6.9,9.2,Cold,Stressed and overwhelmed,57
+P03,2023-11-26,2.8,75,6.6,8.8,Cold,"Didn't sleep well, feeling groggy",59
+P03,2023-11-27,3.5,71,6.9,7.4,Mild,"Day was ok, nothing special",56
+P03,2023-11-28,2.9,75,6.8,8.5,Mild,"Low energy, not very active",75
+P03,2023-11-29,2.7,77,7.6,8.3,Mild,A bit tired,59
+P03,2023-11-30,2.8,72,7.8,7.8,Mild,"Day was ok, nothing special",59
+P04,2023-11-02,4.1,68,7.1,9.9,Warm,Calm and relaxed,77
+P04,2023-11-03,2.7,70,7,9.7,Mild,"Day was ok, nothing special",81
+P04,2023-11-04,3.8,72,6.7,8.3,Warm,Calm and relaxed Nice day outside.,66
+P04,2023-11-05,2.9,80,6.5,8,Mild,"Day was ok, nothing special",80
+P04,2023-11-06,2.7,78,6.7,8.1,Mild,A bit tired,57
+P04,2023-11-07,3.5,71,7.2,7.7,Warm,Felt great today!,55
+P04,2023-11-08,3.2,74,7.2,9.1,Mild,Energetic and motivated,85
+P04,2023-11-09,3.4,68,6.9,7.8,Warm,Calm and relaxed,70
+P04,2023-11-10,4.3,69,6.9,7.5,Warm,Felt great today!,85
+P04,2023-11-11,3.2,73,8,8.3,Mild,Energetic and motivated,83
+P04,2023-11-12,3.3,67,7,9.2,Warm,A bit tired,87
+P04,2023-11-13,3.2,72,6.9,11,Warm,Feeling average,67
+P04,2023-11-14,3.2,74,6.8,9.8,Warm,Feeling average,67
+P04,2023-11-15,3.7,71,6.6,9.2,Warm,"Day was ok, nothing special",65
+P04,2023-11-16,3.7,71,7.9,8.6,Warm,Energetic and motivated Nice day outside.,64
+P04,2023-11-17,3.9,76,7.5,7.3,Warm,Very productive and happy,85
+P04,2023-11-18,2.9,72,7,8.8,Mild,"Day was ok, nothing special",81
+P04,2023-11-19,2.9,73,6.5,9.8,Mild,"Didn't sleep well, feeling groggy",68
+P04,2023-11-20,2.5,72,7.4,8.7,Cold,Feeling average,59
+P04,2023-11-21,2,73,7.8,9.9,Cold,"Day was ok, nothing special Too cold to go out.",69
+P04,2023-11-22,2.3,77,6.7,9.5,Cold,Stressed and overwhelmed,66
+P04,2023-11-23,1.8,73,6.6,9.6,Cold,"Didn't sleep well, feeling groggy",46
+P04,2023-11-24,2.1,72,7.1,10.4,Cold,"Low energy, not very active",54
+P04,2023-11-25,2.5,71,7,9.2,Cold,"Day was ok, nothing special",60
+P04,2023-11-26,1.8,70,7.1,9.8,Cold,"Low energy, not very active",71
+P04,2023-11-27,2.5,66,6.4,10.2,Mild,"Low energy, not very active",63
+P04,2023-11-28,2,69,6,11,Mild,Burnt out from work,62
+P04,2023-11-29,2.5,66,6.5,11.3,Mild,Stressed and overwhelmed,53
+P04,2023-11-30,2,69,6.6,11.1,Mild,"Didn't sleep well, feeling groggy",56
+P05,2023-11-02,2.9,72,6.7,6.6,Warm,Feeling average,77
+P05,2023-11-03,2.1,73,6,7.2,Mild,"Didn't sleep well, feeling groggy",67
+P05,2023-11-04,2.7,73,6.5,7.8,Warm,"Day was ok, nothing special",59
+P05,2023-11-05,2.7,72,7.3,7.8,Mild,Feeling average,65
+P05,2023-11-06,2.3,72,7.3,7,Mild,Feeling average,72
+P05,2023-11-07,3.1,68,7.4,7.7,Warm,Calm and relaxed,67
+P05,2023-11-08,2.2,71,7.1,8.9,Mild,"Low energy, not very active",78
+P05,2023-11-09,3.5,68,6.7,8.7,Warm,A bit tired Nice day outside.,60
+P05,2023-11-10,3.8,69,6.8,7.3,Warm,Energetic and motivated,63
+P05,2023-11-11,3.4,70,6.5,8,Mild,A bit tired,86
+P05,2023-11-12,3.2,70,6.2,8.8,Warm,Stressed and overwhelmed,65
+P05,2023-11-13,3.9,66,6.4,7.4,Warm,Feeling average Nice day outside.,60
+P05,2023-11-14,3.9,73,6.3,7.4,Warm,A bit tired,73
+P05,2023-11-15,4.3,71,6.1,6.4,Warm,Energetic and motivated,69
+P05,2023-11-16,3.9,66,5.9,6.1,Warm,Calm and relaxed,83
+P05,2023-11-17,4.5,65,6.9,5.9,Warm,Energetic and motivated,90
+P05,2023-11-18,2.8,70,7.3,7.3,Mild,Energetic and motivated,95
+P05,2023-11-19,2.6,72,7.2,7.7,Mild,A bit tired,84
+P05,2023-11-20,1.7,70,6.7,8.4,Cold,Stressed and overwhelmed,62
+P05,2023-11-21,1.5,72,6.9,8.7,Cold,Burnt out from work,65
+P05,2023-11-22,2.6,73,7.1,6.2,Cold,Energetic and motivated Too cold to go out.,60
+P05,2023-11-23,2.5,72,6.3,6.4,Cold,"Day was ok, nothing special",78
+P05,2023-11-24,2.3,70,6.2,8.1,Cold,Burnt out from work,67
+P05,2023-11-25,3,73,6.2,8.9,Cold,"Didn't sleep well, feeling groggy",65
+P05,2023-11-26,3.1,70,6.6,8,Cold,A bit tired,61
+P05,2023-11-27,3.2,70,6.4,8.3,Mild,"Day was ok, nothing special",61
+P05,2023-11-28,3.4,72,6.3,7.7,Mild,"Day was ok, nothing special",62
+P05,2023-11-29,3.5,68,5.2,6.2,Mild,Stressed and overwhelmed,72
+P05,2023-11-30,2.8,68,5.7,7.3,Mild,"Didn't sleep well, feeling groggy",61

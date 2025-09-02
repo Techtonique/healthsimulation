@@ -1,0 +1,22 @@
+---
+title: "SmartHealthSimulator"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SmartHealthSimulator}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+library(healthsimulation)
+```
+
+```{r, fig.width=6.5}
+ sim <- SmartHealthSimulator$new(days = 180, seed = 42)
+ head(sim$data)
+ sim$plot_time_series()
+ sim$plot_mood_sleep()
+ sim$plot_activity_distribution()
+ sim$plot_mood_wordcloud()
+```
+

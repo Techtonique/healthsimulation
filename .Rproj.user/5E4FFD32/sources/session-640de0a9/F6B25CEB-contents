@@ -1,0 +1,496 @@
+#' Multimodal Health Time Series Generator
+#'
+#' @description
+#' An R6 class for generating synthetic multimodal health time series data
+#' spanning wearables, environmental sensors, and text-derived features.
+#' Designed for advanced time series forecasting with interdependent variables.
+#'
+#' @details
+#' This class (created alongside Claude) generates realistic synthetic health data with complex interdependencies
+#' across multiple modalities:
+#' - Wearable data: HRV, resting heart rate, sleep quality, daily steps
+#' - Environmental sensors: air quality, temperature, humidity, light exposure
+#' - Text-derived features: stress level, sentiment, complexity, health keywords
+#' - Target variable: daily wellness score (composite measure)
+#'
+#' @examples
+#' # Create generator with specific seed
+#' generator <- MultimodalHealthGenerator$new(seed = 42)
+#'
+#' # Generate 1 year of data
+#' data <- generator$generate(n_days = 365, start_date = "2023-01-01")
+#'
+#' # Get summary statistics
+#' summary_stats <- generator$get_summary_stats()
+#'
+#' # Plot key variables
+#' generator$plot_time_series()
+#'
+#' # Export data
+#' generator$save_data("health_data.csv")
+#'
+#' @export
+MultimodalHealthGenerator <- R6Class(
+  classname = "MultimodalHealthGenerator",
+
+  # Public interface
+  public = list(
+
+    #' @description
+    #' Initialize the multimodal health data generator
+    #' @param seed Integer seed for reproducible random number generation
+    #' @param verbose Logical flag to control output verbosity
+    initialize = function(seed = NULL, verbose = TRUE) {
+      private$verbose <- verbose
+
+      if (!is.null(seed)) {
+        private$seed <- seed
+        set.seed(seed)
+        if (private$verbose) {
+          cat("MultimodalHealthGenerator initialized with seed:", seed, "\n")
+        }
+      } else {
+        private$seed <- sample.int(10000, 1)
+        set.seed(private$seed)
+        if (private$verbose) {
+          cat("MultimodalHealthGenerator initialized with random seed:", private$seed, "\n")
+        }
+      }
+
+      private$data <- NULL
+      private$generation_params <- list()
+    },
+
+    #' @description
+    #' Generate synthetic multimodal health time series data
+    #' @param n_days Number of days to generate (default: 365)
+    #' @param start_date Starting date as string "YYYY-MM-DD" (default: "2023-01-01")
+    #' @param save_params Logical flag to save generation parameters
+    #' @return Data frame with multimodal health time series
+    generate = function(n_days = 365, start_date = "2023-01-01", save_params = TRUE) {
+
+      # Reset seed for reproducibility
+      set.seed(private$seed)
+
+      if (private$verbose) {
+        cat("Generating", n_days, "days of multimodal health data starting from", start_date, "\n")
+      }
+
+      # Store generation parameters
+      if (save_params) {
+        private$generation_params <- list(
+          n_days = n_days,
+          start_date = start_date,
+          seed = private$seed,
+          generated_at = Sys.time()
+        )
+      }
+
+      # Generate temporal structure
+      temporal_data <- private$generate_temporal_structure(n_days, start_date)
+
+      # Generate each modality
+      wearable_data <- private$generate_wearable_data(temporal_data)
+      environmental_data <- private$generate_environmental_data(temporal_data)
+      text_data <- private$generate_text_modality(temporal_data, wearable_data, environmental_data)
+
+      # Generate target variable (wellness score)
+      target_data <- private$generate_target_variable(temporal_data, wearable_data,
+                                                      environmental_data, text_data)
+
+      # Combine all modalities
+      private$data <- cbind(temporal_data, wearable_data, environmental_data, text_data, target_data)
+
+      if (private$verbose) {
+        cat("✓ Generated dataset with dimensions:", nrow(private$data), "×", ncol(private$data), "\n")
+      }
+
+      return(private$data)
+    },
+
+    #' @description
+    #' Get the generated dataset
+    #' @return Data frame with generated data or NULL if not yet generated
+    get_data = function() {
+      if (is.null(private$data)) {
+        warning("No data generated yet. Call generate() first.")
+        return(NULL)
+      }
+      return(private$data)
+    },
+
+    #' @description
+    #' Get summary statistics for all numeric variables
+    #' @return Data frame with summary statistics
+    get_summary_stats = function() {
+      if (is.null(private$data)) {
+        stop("No data generated yet. Call generate() first.")
+      }
+
+      numeric_cols <- private$data %>%
+        select(where(is.numeric)) %>%
+        select(-day_of_year, -day_of_week)
+
+      summary_stats <- numeric_cols %>%
+        summarise_all(list(
+          mean = ~round(mean(., na.rm = TRUE), 2),
+          sd = ~round(sd(., na.rm = TRUE), 2),
+          min = ~round(min(., na.rm = TRUE), 2),
+          max = ~round(max(., na.rm = TRUE), 2)
+        )) %>%
+        pivot_longer(everything(), names_to = "variable", values_to = "value") %>%
+        separate(variable, into = c("variable", "statistic"), sep = "_(?=[^_]*$)") %>%
+        pivot_wider(names_from = statistic, values_from = value)
+
+      return(summary_stats)
+    },
+
+    #' @description
+    #' Calculate correlation matrix with target variable
+    #' @return Data frame with correlations sorted by absolute value
+    get_target_correlations = function() {
+      if (is.null(private$data)) {
+        stop("No data generated yet. Call generate() first.")
+      }
+
+      numeric_vars <- private$data %>%
+        select(where(is.numeric)) %>%
+        select(-day_of_year, -day_of_week)
+
+      cor_matrix <- cor(numeric_vars, use = "complete.obs")
+
+      target_cors <- data.frame(
+        Variable = rownames(cor_matrix),
+        Correlation = round(cor_matrix[, "daily_wellness_score"], 3)
+      ) %>%
+        filter(Variable != "daily_wellness_score") %>%
+        arrange(desc(abs(Correlation)))
+
+      return(target_cors)
+    },
+
+    #' @description
+    #' Create time series plots for key variables
+    #' @param variables Character vector of variables to plot (default: key variables)
+    #' @return ggplot object
+    plot_time_series = function(variables = NULL) {
+      if (is.null(private$data)) {
+        stop("No data generated yet. Call generate() first.")
+      }
+
+      if (is.null(variables)) {
+        variables <- c("daily_wellness_score", "sleep_quality_score",
+                       "stress_level", "hrv_ms", "air_quality_index", "text_sentiment")
+      }
+
+      plot_data <- private$data %>%
+        select(date, all_of(variables)) %>%
+        pivot_longer(-date, names_to = "variable", values_to = "value")
+
+      p <- ggplot(plot_data, aes(x = date, y = value, color = variable)) +
+        geom_line(alpha = 0.8, size = 0.6) +
+        facet_wrap(~ variable, scales = "free_y", ncol = 2) +
+        scale_color_viridis_d(option = "plasma") +
+        labs(
+          title = "Multimodal Health Time Series",
+          subtitle = paste("Generated with seed:", private$seed),
+          x = "Date",
+          y = "Value"
+        ) +
+        theme_minimal() +
+        theme(
+          legend.position = "none",
+          strip.text = element_text(face = "bold", size = 10),
+          plot.title = element_text(face = "bold", size = 14)
+        )
+
+      return(p)
+    },
+
+    #' @description
+    #' Create correlation heatmap
+    #' @param method Correlation method ("pearson", "spearman", "kendall")
+    #' @return Correlation plot
+    plot_correlations = function(method = "pearson") {
+      if (is.null(private$data)) {
+        stop("No data generated yet. Call generate() first.")
+      }
+
+      numeric_vars <- private$data %>%
+        select(where(is.numeric)) %>%
+        select(-day_of_year, -day_of_week)
+
+      cor_matrix <- cor(numeric_vars, method = method, use = "complete.obs")
+
+      corrplot(cor_matrix, method = "color", type = "upper",
+               order = "hclust", tl.cex = 0.8, tl.col = "black",
+               title = paste("Correlation Matrix (", method, ")", sep = ""),
+               mar = c(0, 0, 2, 0))
+    },
+
+    #' @description
+    #' Analyze interdependencies between modalities
+    #' @return List with analysis results
+    analyze_interdependencies = function() {
+      if (is.null(private$data)) {
+        stop("No data generated yet. Call generate() first.")
+      }
+
+      # Stress quartile analysis
+      stress_effects <- private$data %>%
+        mutate(stress_quartile = ntile(stress_level, 4)) %>%
+        group_by(stress_quartile) %>%
+        summarise(
+          avg_wellness = round(mean(daily_wellness_score), 1),
+          avg_sleep = round(mean(sleep_quality_score), 1),
+          avg_hrv = round(mean(hrv_ms), 1),
+          avg_sentiment = round(mean(text_sentiment), 3),
+          avg_keywords = round(mean(health_keywords_count), 1),
+          .groups = 'drop'
+        ) %>%
+        mutate(stress_level_category = c("Low (Q1)", "Medium-Low (Q2)",
+                                         "Medium-High (Q3)", "High (Q4)"))
+
+      # Environmental effects
+      env_effects <- private$data %>%
+        mutate(aqi_category = case_when(
+          air_quality_index <= 50 ~ "Good",
+          air_quality_index <= 100 ~ "Moderate",
+          TRUE ~ "Unhealthy"
+        )) %>%
+        group_by(aqi_category) %>%
+        summarise(
+          count = n(),
+          avg_wellness = round(mean(daily_wellness_score), 1),
+          avg_stress = round(mean(stress_level), 1),
+          avg_steps = round(mean(daily_steps), 0),
+          .groups = 'drop'
+        )
+
+      return(list(
+        stress_effects = stress_effects,
+        environmental_effects = env_effects
+      ))
+    },
+
+    #' @description
+    #' Save generated data to CSV file
+    #' @param filename Output filename (default: "multimodal_health_data.csv")
+    #' @param include_metadata Whether to save generation metadata
+    save_data = function(filename = "multimodal_health_data.csv", include_metadata = TRUE) {
+      if (is.null(private$data)) {
+        stop("No data generated yet. Call generate() first.")
+      }
+
+      write.csv(private$data, filename, row.names = FALSE)
+
+      if (include_metadata && length(private$generation_params) > 0) {
+        metadata_file <- gsub("\\.csv$", "_metadata.txt", filename)
+        writeLines(c(
+          "Multimodal Health Time Series Dataset Metadata",
+          "=" %R% 50,
+          paste("Generated at:", private$generation_params$generated_at),
+          paste("Seed:", private$generation_params$seed),
+          paste("Number of days:", private$generation_params$n_days),
+          paste("Start date:", private$generation_params$start_date),
+          paste("Dimensions:", nrow(private$data), "×", ncol(private$data))
+        ), metadata_file)
+
+        if (private$verbose) {
+          cat("✓ Data saved to:", filename, "\n")
+          cat("✓ Metadata saved to:", metadata_file, "\n")
+        }
+      } else {
+        if (private$verbose) {
+          cat("✓ Data saved to:", filename, "\n")
+        }
+      }
+    },
+
+    #' @description
+    #' Get information about the generator
+    #' @return List with generator information
+    get_info = function() {
+      return(list(
+        class = "MultimodalHealthGenerator",
+        seed = private$seed,
+        data_generated = !is.null(private$data),
+        data_dimensions = if (!is.null(private$data)) dim(private$data) else c(0, 0),
+        generation_params = private$generation_params
+      ))
+    }
+  ),
+
+  # Private methods and fields
+  private = list(
+    data = NULL,
+    seed = NULL,
+    verbose = TRUE,
+    generation_params = list(),
+
+    # Generate temporal structure
+    generate_temporal_structure = function(n_days, start_date) {
+      dates <- seq(as.Date(start_date), by = "day", length.out = n_days)
+
+      data.frame(
+        date = dates,
+        day_of_year = yday(dates),
+        day_of_week = wday(dates, week_start = 1),
+        is_weekend = wday(dates, week_start = 1) %in% c(6, 7),
+        month = month(dates),
+        season = case_when(
+          month(dates) %in% c(12, 1, 2) ~ "winter",
+          month(dates) %in% c(3, 4, 5) ~ "spring",
+          month(dates) %in% c(6, 7, 8) ~ "summer",
+          TRUE ~ "autumn"
+        )
+      )
+    },
+
+    # Generate wearable data
+    generate_wearable_data = function(temporal_data) {
+      n_days <- nrow(temporal_data)
+
+      # Cycles
+      circadian_cycle <- sin(2 * pi * temporal_data$day_of_year / 365.25)
+      weekly_cycle <- sin(2 * pi * temporal_data$day_of_week / 7)
+
+      # Heart Rate Variability
+      hrv_base <- 45 + 15 * circadian_cycle + 5 * weekly_cycle
+      hrv_noise <- rnorm(n_days, 0, 8)
+      hrv <- pmax(20, hrv_base + hrv_noise)
+
+      # Resting Heart Rate
+      rhr_base <- 70 - 0.3 * (hrv - 45) + 5 * ifelse(temporal_data$is_weekend, -1, 1)
+      rhr_noise <- rnorm(n_days, 0, 4)
+      resting_hr <- pmax(50, pmin(90, rhr_base + rhr_noise))
+
+      # Sleep Quality
+      sleep_base <- 75 + 0.4 * (hrv - 45) - 10 * ifelse(temporal_data$is_weekend, -0.5, 0.5)
+      sleep_noise <- rnorm(n_days, 0, 12)
+      sleep_quality <- pmax(30, pmin(100, sleep_base + sleep_noise))
+
+      # Daily Steps
+      steps_base <- 8000 + 2000 * weekly_cycle + 1000 * ifelse(temporal_data$is_weekend, 0.5, -0.5)
+      steps_noise <- rnorm(n_days, 0, 1500)
+      daily_steps <- pmax(2000, steps_base + steps_noise)
+
+      return(data.frame(
+        hrv_ms = round(hrv, 1),
+        resting_hr_bpm = round(resting_hr, 0),
+        sleep_quality_score = round(sleep_quality, 0),
+        daily_steps = round(daily_steps, 0)
+      ))
+    },
+
+    # Generate environmental sensor data
+    generate_environmental_data = function(temporal_data) {
+      # Air Quality Index
+      aqi_seasonal <- case_when(
+        temporal_data$season == "winter" ~ 85 + rnorm(sum(temporal_data$season == "winter"), 0, 15),
+        temporal_data$season == "summer" ~ 95 + rnorm(sum(temporal_data$season == "summer"), 0, 20),
+        TRUE ~ 75 + rnorm(sum(!temporal_data$season %in% c("winter", "summer")), 0, 12)
+      )
+      air_quality_index <- pmax(20, pmin(150, aqi_seasonal))
+
+      # Temperature
+      temp_base <- case_when(
+        temporal_data$season == "winter" ~ 21 + rnorm(sum(temporal_data$season == "winter"), 0, 2),
+        temporal_data$season == "summer" ~ 24 + rnorm(sum(temporal_data$season == "summer"), 0, 2.5),
+        TRUE ~ 22 + rnorm(sum(!temporal_data$season %in% c("winter", "summer")), 0, 1.5)
+      )
+      indoor_temp <- pmax(18, pmin(28, temp_base))
+
+      # Humidity
+      humidity_base <- case_when(
+        temporal_data$season == "winter" ~ 35 + rnorm(sum(temporal_data$season == "winter"), 0, 8),
+        temporal_data$season == "summer" ~ 65 + rnorm(sum(temporal_data$season == "summer"), 0, 10),
+        TRUE ~ 50 + rnorm(sum(!temporal_data$season %in% c("winter", "summer")), 0, 8)
+      )
+      humidity <- pmax(25, pmin(80, humidity_base))
+
+      # Light Exposure
+      light_base <- case_when(
+        temporal_data$season == "winter" ~ 300 + rnorm(sum(temporal_data$season == "winter"), 0, 80),
+        temporal_data$season == "summer" ~ 600 + rnorm(sum(temporal_data$season == "summer"), 0, 120),
+        TRUE ~ 450 + rnorm(sum(!temporal_data$season %in% c("winter", "summer")), 0, 90)
+      )
+      light_exposure <- pmax(100, light_base)
+
+      return(data.frame(
+        air_quality_index = round(air_quality_index, 0),
+        indoor_temp_c = round(indoor_temp, 1),
+        humidity_percent = round(humidity, 0),
+        light_exposure_lux_hrs = round(light_exposure, 0)
+      ))
+    },
+
+    # Generate text-derived modality
+    generate_text_modality = function(temporal_data, wearable_data, environmental_data) {
+      n_days <- nrow(temporal_data)
+
+      # Stress Level
+      stress_base <- 5 + 2 * sin(2 * pi * temporal_data$day_of_year / 365.25) +
+        1.5 * ifelse(temporal_data$day_of_week == 1, 1, 0) +
+        0.02 * (environmental_data$air_quality_index - 75) -
+        0.03 * (wearable_data$sleep_quality_score - 75)
+      stress_noise <- rnorm(n_days, 0, 1.2)
+      stress_level <- pmax(0, pmin(10, stress_base + stress_noise))
+
+      # Text Sentiment
+      sentiment_base <- 0.6 - 0.08 * stress_level + 0.004 * (wearable_data$sleep_quality_score - 75)
+      sentiment_noise <- rnorm(n_days, 0, 0.15)
+      text_sentiment <- pmax(-1, pmin(1, sentiment_base + sentiment_noise))
+
+      # Text Complexity
+      complexity_base <- 12 + 2 * stress_level + rnorm(n_days, 0, 2)
+      text_complexity <- pmax(8, pmin(25, complexity_base))
+
+      # Health Keywords
+      health_mentions_rate <- 2 + 0.3 * stress_level + 0.02 * (75 - wearable_data$sleep_quality_score)
+      health_keywords <- rpois(n_days, health_mentions_rate)
+
+      return(data.frame(
+        stress_level = round(stress_level, 1),
+        text_sentiment = round(text_sentiment, 3),
+        text_complexity_words = round(text_complexity, 1),
+        health_keywords_count = health_keywords
+      ))
+    },
+
+    # Generate target variable (wellness score)
+    generate_target_variable = function(temporal_data, wearable_data, environmental_data, text_data) {
+      n_days <- nrow(temporal_data)
+
+      # Wellness components
+      wellness_components <- data.frame(
+        hrv_contrib = scale(wearable_data$hrv_ms)[,1] * 0.20,
+        sleep_contrib = scale(wearable_data$sleep_quality_score)[,1] * 0.25,
+        steps_contrib = scale(wearable_data$daily_steps)[,1] * 0.15,
+        stress_contrib = -scale(text_data$stress_level)[,1] * 0.20,
+        aqi_contrib = -scale(environmental_data$air_quality_index)[,1] * 0.08,
+        light_contrib = scale(environmental_data$light_exposure_lux_hrs)[,1] * 0.07,
+        sentiment_contrib = scale(text_data$text_sentiment)[,1] * 0.05
+      )
+
+      # Base wellness score
+      wellness_base <- rowSums(wellness_components)
+
+      # Interaction effects
+      interaction_effect <- -0.02 * (environmental_data$air_quality_index - 75) * (text_data$stress_level - 5)
+
+      # Autoregressive component
+      wellness_raw <- 50 + 15 * wellness_base + interaction_effect + rnorm(n_days, 0, 5)
+      wellness_score <- numeric(n_days)
+      wellness_score[1] <- max(0, min(100, wellness_raw[1]))
+
+      for(i in 2:n_days) {
+        wellness_score[i] <- max(0, min(100, 0.7 * wellness_raw[i] + 0.3 * wellness_score[i-1]))
+      }
+
+      return(data.frame(
+        daily_wellness_score = round(wellness_score, 1)
+      ))
+    }
+  )
+)
