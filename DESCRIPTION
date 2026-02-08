@@ -1,7 +1,9 @@
 Package: healthsimulation
 Type: Package
 Title: Generate Synthetic Healthcare data
-Version: 0.1.0
+Description: Generate Synthetic Healthcare data for research.
+Version: 0.1.1
+Date: 2026-02-08
 Authors@R: c(
     person(
       "T.", "Moudiki",
@@ -9,9 +11,11 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
+Author: T. Moudiki
+Maintainer: T. Moudiki <thierry.moudiki@gmail.com>
 Depends: tidyverse, R6, ggplot2, corrplot, viridis, ggwordcloud
-Description: Generate Synthetic Healthcare data for research.
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
+Suggests: patchwork
 VignetteBuilder: knitr

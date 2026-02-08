@@ -61,14 +61,19 @@ SmartHealthSimulator <- R6::R6Class("SmartHealthSimulator",
                                       },
 
                                       #' @description
-                                      #' Plot the relationship between mood score and sleep quality
-                                      #' @return A ggplot2 scatter plot with regression line
+                                      #' Plot the relationship between mood score and sleep quality on a log scale (y-axis)
+                                      #' @return A ggplot2 scatter plot with regression line and log-transformed y-axis
                                       plot_mood_sleep = function() {
                                         ggplot(self$data, aes(x = mood_score, y = sleep_quality)) +
                                           geom_jitter(width = 0.2, height = 0.5, alpha = 0.6, color = "steelblue") +
                                           geom_smooth(method = "lm", se = FALSE, color = "darkred") +
+                                          scale_y_log10() +
                                           theme_minimal(base_size = 13) +
-                                          labs(title = "Sleep Quality vs. Mood Score", x = "Mood Score", y = "Sleep Quality")
+                                          labs(
+                                            title = "Sleep Quality vs. Mood Score (Log Scale)",
+                                            x = "Mood Score",
+                                            y = "Log10(Sleep Quality)"
+                                          )
                                       },
 
                                       #' @description
@@ -145,7 +150,7 @@ SmartHealthSimulator <- R6::R6Class("SmartHealthSimulator",
                                           activity_penalty +
                                           rnorm(n, 0, 5)
 
-                                        sleep_quality <- round(pmin(pmax(sleep_quality, 0), 100), 1)
+                                        #sleep_quality <- round(pmin(pmax(sleep_quality, 0), 100), 1)
 
                                         self$data <- data.frame(
                                           timestamp = timestamps,
