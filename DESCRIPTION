@@ -17,5 +17,7 @@ Depends: tidyverse, R6, ggplot2, corrplot, viridis, ggwordcloud
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Suggests: patchwork
+Suggests: knitr, rmarkdown, patchwork
 VignetteBuilder: knitr
+
+
